@@ -1,0 +1,18 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Google Calendar
+Name[no]=Google Kalender
+Type=Service
+ServiceTypes=Plasma/Applet
+Icon=office-calendar
+X-Plasma-API=python
+X-Plasma-MainScript=code/main.py
+X-KDE-PluginInfo-Author=Erlend Hamberg
+X-KDE-PluginInfo-Email=ehamberg@gmail.com
+X-KDE-PluginInfo-Name=gcal
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Date and Time
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
