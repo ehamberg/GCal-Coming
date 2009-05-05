@@ -1,4 +1,3 @@
-# Copyright stuff
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.plasma import Plasma
@@ -15,6 +14,7 @@ class HelloWorldApplet(plasmascript.Applet):
         self.theme = Plasma.Svg(self)
         self.theme.setImagePath("widgets/background")
         self.setBackgroundHints(Plasma.Applet.DefaultBackground)
+        self.setAspectRatioMode(Plasma.IgnoreAspectRatio)
 
         self.layout = QGraphicsLinearLayout(Qt.Horizontal, self.applet)
         webView = Plasma.WebView(self.applet)
