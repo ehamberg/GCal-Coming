@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>preferences-contact-list.png</file>
+  </qresource>
+</RCC>
