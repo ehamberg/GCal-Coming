@@ -25,8 +25,15 @@ class Settings(QWidget, Ui_gcal_settings):
                 self.le_email.setText(username)
                 self.le_password.setText(str(password))
         else:
-            print(":(")
+            self.kwalletError()
 
     def getSettings(self):
         return {'username': str(self.le_email.text()),
                 'password': str(self.le_password.text())}
+
+    def kwalletError(self):
+        self.lbl_icon.setPixmap(QPixmap(":/icons/dialog-error.png"))
+        self.le_email.setEnabled(False)
+        self.le_password.setEnabled(False)
+        self.lbl_explanation.setText("Sorry, settings can only be stored"
+        + " securely if you allow this widget to access your KWallet.")

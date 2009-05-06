@@ -49,7 +49,8 @@ class GCalApplet(plasmascript.Applet):
             src = self.getSrc()
 
         else:
-            src = "KWallet FAIL"
+            self.storeUserAndDomain("", "")
+            src = self.getSrc()
 
         self.layout = QGraphicsLinearLayout(Qt.Horizontal, self.applet)
         self.webview = Plasma.WebView(self.applet)
@@ -83,7 +84,7 @@ class GCalApplet(plasmascript.Applet):
         wallet = KWallet.Wallet.openWallet(KWallet.Wallet.LocalWallet(), 0)
         if wallet <> None:
             wallet.setFolder("gcal-plasmoid")
-            for e in self.wallet.entryList():
+            for e in wallet.entryList():
                 wallet.removeEntry(e)
             wallet.writePassword(QString(self.settings['username']),
                     QString(self.settings['password']))
@@ -112,10 +113,15 @@ class GCalApplet(plasmascript.Applet):
         src = webFile.read()
         webFile.close()
 
-        src = src.replace("id=\"Email\"", "id=\"Email\" value=\""+self.settings["username"]+"\"")
-        src = src.replace("id=\"Passwd\"", "id=\"Passwd\" value=\""+self.settings["password"]+"\"")
-        src = src.replace("id=\"gaia_loginform\"", "id=\"gaia_loginform\" name=\"gaia_loginform\"")
-        src = src.replace("</body>", "<script>document.gaia_loginform.submit()</script>\n</body>")
+        if self.settings['username']:
+            src = src.replace("id=\"Email\"",
+                    "id=\"Email\" value=\""+self.settings['username']+"\"")
+            src = src.replace("id=\"Passwd\"",
+                    "id=\"Passwd\" value=\""+self.settings['password']+"\"")
+            src = src.replace("id=\"gaia_loginform\"",
+                    "id=\"gaia_loginform\" name=\"gaia_loginform\"")
+            src = src.replace("</body>",
+                    "<script>document.gaia_loginform.submit()</script></body>")
 
         return src
 

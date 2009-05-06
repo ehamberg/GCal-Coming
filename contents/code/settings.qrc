@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/" >
-    <file>preferences-contact-list.png</file>
+    <file>icons/dialog-error.png</file>
+    <file>icons/preferences-contact-list.png</file>
   </qresource>
 </RCC>
