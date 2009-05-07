@@ -38,15 +38,23 @@ class GCalApplet(plasmascript.Applet):
 
             self.wallet.setFolder("gcal-plasmoid")
             if self.wallet.entryList().isEmpty():
-                self.showConfigurationInterface()
+                src = """
+                <div style="text-align: center">
+                <img src="http://calendar.google.com/googlecalendar/images/calendar_sm2_en.gif" />
+                <p>
+                Click the wrench to configure the Google Calendar widget.
+                </p>
+                </div>
+                """
+                #self.showConfigurationInterface()
+            else:
+                username = str(self.wallet.entryList().first())
 
-            username = str(self.wallet.entryList().first()) # FIXME
+                password = QString()
+                self.wallet.readPassword(username, password)
 
-            password = QString()
-            self.wallet.readPassword(username, password)
-
-            self.storeUserAndDomain(username, str(password))
-            src = self.getSrc()
+                self.storeUserAndDomain(username, str(password))
+                src = self.getSrc()
 
         else:
             self.storeUserAndDomain("", "")
@@ -54,7 +62,13 @@ class GCalApplet(plasmascript.Applet):
 
         self.layout = QGraphicsLinearLayout(Qt.Horizontal, self.applet)
         self.webview = Plasma.WebView(self.applet)
-        #self.webview.setUrl(KUrl("http://google.com/calendar/m"))
+
+        # google's ugly 1995 gifs destroys the beauty of transparency :(
+        #palette = self.webview.palette()
+        #palette.setBrush(QPalette.Base, Qt.transparent)
+        #self.webview.page().setPalette(palette)
+        #self.webview.setAttribute(Qt.WA_OpaquePaintEvent, False)
+
         self.webview.setHtml(src)
         self.layout.addItem(self.webview)
         self.setLayout(self.layout)
