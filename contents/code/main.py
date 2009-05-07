@@ -22,15 +22,12 @@ class GCalApplet(plasmascript.Applet):
     def init(self):
         self.settings = {}
         self.setHasConfigurationInterface(False)
-
         self.theme = Plasma.Svg(self)
         self.theme.setImagePath("widgets/background")
         self.setBackgroundHints(Plasma.Applet.DefaultBackground)
         self.setAspectRatioMode(Plasma.IgnoreAspectRatio)
 
         self.wallet = KWallet.Wallet.openWallet(KWallet.Wallet.LocalWallet(), 0)
-
-        src = ""
 
         if self.wallet <> None:
             if not self.wallet.hasFolder("gcal-plasmoid"):
@@ -123,9 +120,18 @@ class GCalApplet(plasmascript.Applet):
         self.settings['password'] = password
 
     def getSrc(self):
-        webFile = urllib.urlopen(self.url)
-        src = webFile.read()
-        webFile.close()
+        try:
+            webFile = urllib.urlopen(self.url)
+            src = webFile.read()
+            webFile.close()
+        except IOError, e:
+            src = """
+            <div style="text-align: center; color: #ee2222;">
+            <p>
+            Network error: Could not connect to Google Calendar.
+            </p>
+            </div>
+            """
 
         if self.settings['username']:
             src = src.replace("id=\"Email\"",
@@ -138,6 +144,9 @@ class GCalApplet(plasmascript.Applet):
                     "<script>document.gaia_loginform.submit()</script></body>")
 
         return src
+
+    def connectionCheck(self):
+        pass
 
 
 def CreateApplet(parent):
