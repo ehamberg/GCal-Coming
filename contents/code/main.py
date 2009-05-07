@@ -28,6 +28,7 @@ class GCalApplet(plasmascript.Applet):
         self.setAspectRatioMode(Plasma.IgnoreAspectRatio)
 
         self.wallet = KWallet.Wallet.openWallet(KWallet.Wallet.LocalWallet(), 0)
+        self.timer = QTimer(self)
 
         if self.wallet <> None:
             if not self.wallet.hasFolder("gcal-plasmoid"):
@@ -124,7 +125,19 @@ class GCalApplet(plasmascript.Applet):
             webFile = urllib.urlopen(self.url)
             src = webFile.read()
             webFile.close()
+
+            if self.timer.isActive():
+                self.timer.stop()
         except IOError, e:
+            # NOTE: It appears that the Solid.Networking.notifier() function has
+            # not be included in pyKDE4 as of now. This should be used when it
+            # is included. For now, lets try every 5 seconds...
+            if not self.timer.isActive():
+                self.timer.setInterval(5000)
+                self.connect(self.timer, SIGNAL("timeout()"),
+                        self.connectionCheck)
+                self.timer.start()
+
             src = """
             <div style="text-align: center; color: #ee2222;">
             <p>
@@ -146,6 +159,7 @@ class GCalApplet(plasmascript.Applet):
         return src
 
     def connectionCheck(self):
+        self.webview.setHtml(self.getSrc())
         pass
 
 
