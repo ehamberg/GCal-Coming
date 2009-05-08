@@ -21,42 +21,18 @@ class GCalApplet(plasmascript.Applet):
 
     def init(self):
         self.settings = {}
-        self.setHasConfigurationInterface(False)
+        self.setHasConfigurationInterface(True)
         self.theme = Plasma.Svg(self)
         self.theme.setImagePath("widgets/background")
         self.setBackgroundHints(Plasma.Applet.DefaultBackground)
         self.setAspectRatioMode(Plasma.IgnoreAspectRatio)
 
-        self.wallet = KWallet.Wallet.openWallet(KWallet.Wallet.LocalWallet(), 0)
-        self.timer = QTimer(self)
+        self.wallet = KWallet.Wallet.openWallet(KWallet.Wallet.LocalWallet(), 0, 1)
+        self.timer = QTimer(self) # for polling network connectivity if offline
+        self.storeUserAndDomain("", "")
 
         if self.wallet <> None:
-            if not self.wallet.hasFolder("gcal-plasmoid"):
-                self.wallet.createFolder("gcal-plasmoid")
-
-            self.wallet.setFolder("gcal-plasmoid")
-            if self.wallet.entryList().isEmpty():
-                src = """
-                <div style="text-align: center">
-                <img src="http://calendar.google.com/googlecalendar/images/calendar_sm2_en.gif" />
-                <p>
-                Click the wrench to configure the Google Calendar widget.
-                </p>
-                </div>
-                """
-                #self.showConfigurationInterface()
-            else:
-                username = str(self.wallet.entryList().first())
-
-                password = QString()
-                self.wallet.readPassword(username, password)
-
-                self.storeUserAndDomain(username, str(password))
-                src = self.getSrc()
-
-        else:
-            self.storeUserAndDomain("", "")
-            src = self.getSrc()
+            self.connect(self.wallet, SIGNAL("walletOpened(bool)"), self.walletOpened)
 
         self.layout = QGraphicsLinearLayout(Qt.Horizontal, self.applet)
         self.webview = Plasma.WebView(self.applet)
@@ -67,7 +43,7 @@ class GCalApplet(plasmascript.Applet):
         #self.webview.page().setPalette(palette)
         #self.webview.setAttribute(Qt.WA_OpaquePaintEvent, False)
 
-        self.webview.setHtml(src)
+        self.webview.setHtml(self.getSrc())
         self.layout.addItem(self.webview)
         self.setLayout(self.layout)
         self.resize(300,400)
@@ -160,7 +136,31 @@ class GCalApplet(plasmascript.Applet):
 
     def connectionCheck(self):
         self.webview.setHtml(self.getSrc())
-        pass
+
+    def walletOpened(self):
+        if not self.wallet.hasFolder("gcal-plasmoid"):
+            self.wallet.createFolder("gcal-plasmoid")
+
+        self.wallet.setFolder("gcal-plasmoid")
+        if self.wallet.entryList().isEmpty():
+            src = """
+            <div style="text-align: center">
+            <img src="http://calendar.google.com/googlecalendar/images/calendar_sm2_en.gif" />
+            <p>
+            Click the wrench to configure the Google Calendar widget.
+            </p>
+            </div>
+            """
+            #self.showConfigurationInterface()
+        else:
+            username = str(self.wallet.entryList().first())
+
+            password = QString()
+            self.wallet.readPassword(username, password)
+
+            self.storeUserAndDomain(username, str(password))
+            src = self.getSrc()
+        self.webview.setHtml(src)
 
 
 def CreateApplet(parent):
