@@ -87,7 +87,7 @@ class GCalApplet(plasmascript.Applet):
         # if username is an email address with a domain name other than
         # gmail.com, assume it's a Google Apps for your Domain thingie and
         # change the url
-        if m <> None and m.group(1) <> "gmail.com":
+        if m <> None and m.group(1) <> "gmail.com" and m.group(1) <> "googlemail.com":
             self.url = "http://google.com/calendar/hosted/" + m.group(1) + "/m"
             username = re_email.sub('', username)
         else:
