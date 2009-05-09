@@ -89,7 +89,6 @@ class GCalApplet(plasmascript.Applet):
         # change the url
         if m <> None and m.group(1) <> "gmail.com" and m.group(1) <> "googlemail.com":
             self.url = "http://google.com/calendar/hosted/" + m.group(1) + "/m"
-            username = re_email.sub('', username)
         else:
             self.url = "http://google.com/calendar/m"
 
@@ -123,8 +122,11 @@ class GCalApplet(plasmascript.Applet):
             """
 
         if self.settings['username']:
+            re_email = re.compile('@(.+)')
+            username = re_email.sub('', self.settings['username'])
+
             src = src.replace("id=\"Email\"",
-                    "id=\"Email\" value=\""+self.settings['username']+"\"")
+                    "id=\"Email\" value=\""+username+"\"")
             src = src.replace("id=\"Passwd\"",
                     "id=\"Passwd\" value=\""+self.settings['password']+"\"")
             src = src.replace("id=\"gaia_loginform\"",
