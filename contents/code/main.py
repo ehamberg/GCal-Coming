@@ -37,11 +37,11 @@ class GCalApplet(plasmascript.Applet):
         self.layout = QGraphicsLinearLayout(Qt.Horizontal, self.applet)
         self.webview = Plasma.WebView(self.applet)
 
-        # google's ugly 1995 gifs destroys the beauty of transparency :(
-        #palette = self.webview.palette()
-        #palette.setBrush(QPalette.Base, Qt.transparent)
-        #self.webview.page().setPalette(palette)
-        #self.webview.setAttribute(Qt.WA_OpaquePaintEvent, False)
+        # google's ugly 1995 gifs ruins the beauty of transparency :(
+        palette = self.webview.palette()
+        palette.setBrush(QPalette.Base, Qt.white)
+        self.webview.page().setPalette(palette)
+        self.webview.setAttribute(Qt.WA_OpaquePaintEvent, False)
 
         self.webview.setHtml(self.getSrc())
         self.layout.addItem(self.webview)

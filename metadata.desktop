@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Google Calendar
-Name[no]=Google Kalender
+Name=Google Calendar — Coming Events
+Name[no]=Google kalender — Kommende hendelser
 Type=Service
 ServiceTypes=Plasma/Applet
 Icon=office-calendar
