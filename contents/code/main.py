@@ -55,6 +55,14 @@ class GCalApplet(plasmascript.Applet):
         self.setLayout(self.layout)
         self.resize(300,400)
 
+    def paintInterface(self, painter, option, rect):
+        painter.save()
+        painter.setPen(Qt.white)
+        painter.setBrush(Qt.white)
+        rectangle = QRectF(15.0, 15.0, self.size().width()-30.0, self.size().height()-30.0)
+        painter.drawRoundedRect(rectangle, 6.0, 6.0)
+        painter.restore()
+
     def createConfigurationInterface(self, parent):
         self.gcalsettings = Settings(self)
         p = parent.addPage(self.gcalsettings, i18n("Google Calendar Settings") )
